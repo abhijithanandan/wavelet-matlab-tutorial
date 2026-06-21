@@ -91,7 +91,7 @@ fprintf('  the wavelet features add about %.0f points.\n', 100 * (acc - acc_raw)
 % one closed-form step.
 mu = mean(Ftrain, 1); sd = std(Ftrain, 0, 1); sd(sd == 0) = 1;
 Zte = [(Ftest - mu) ./ sd, ones(size(Ftest, 1), 1)];
-rng(1); rand_W = randn(size(Zte, 2), C);
+rand('seed', 1); rand_W = randn(size(Zte, 2), C);
 [~, pred_rand] = max(Zte * rand_W, [], 2);
 acc_rand = mean(pred_rand == ytest);
 fprintf('\n[2] Is the pseudo-inverse doing the work? (same fixed features)\n');
