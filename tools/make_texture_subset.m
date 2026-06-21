@@ -26,7 +26,7 @@ function make_texture_subset(input_dir, output_path, sz, ntrain, ntest, nclasses
   ytr = zeros(nclasses * ntrain, 1);
   yte = zeros(nclasses * ntest, 1);
 
-  rand('seed', seed);
+  rng(seed);             % seed the generator that randperm draws from, reproducibly
   ti = 0; ei = 0;
   for c = 1:nclasses
     cdir = fullfile(input_dir, names{c});
