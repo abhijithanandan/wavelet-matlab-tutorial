@@ -1,0 +1,18 @@
+# Dev-local design/plan docs — never tracked (per repo policy)
+docs/specs/
+docs/plans/
+
+# MATLAB / Octave scratch
+octave-workspace
+*.asv
+*.m~
+
+# Generated tutorial figures
+tutorial/figures/
+matlab/figures/
+
+# SDD / agent scratch — AI-workflow traces, never tracked
+.superpowers/
+
+# OS junk
+.DS_Store
