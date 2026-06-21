@@ -46,7 +46,7 @@ prints the feature dimension and test accuracy.
 |---|---|---|
 | DWT levels | 3 | 4 |
 | Scattering order | 1 | 2 (extra decomposition at level 1) |
-| Feature dimension | 10 | 25 |
+| Feature dimension | 160 | 25 |
 | Readout | pinv (shared) | pinv (shared) |
 | Toolboxes | none | none |
 
