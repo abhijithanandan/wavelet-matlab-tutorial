@@ -55,7 +55,7 @@ prints the feature dimension and test accuracy.
 `tests/test_haar_reference.m` checks the shared `haar_dwt` against reference
 values derived by hand for a fixed 4x4 input. It verifies all four sub-bands
 (LL, LH, HL, HH) to numerical precision and is independent of the per-block
-unit test already in `common/`.
+unit test in `tests/test_haar_dwt.m`.
 
 `tests/test_wscat_features.m` checks that `wscat.features` returns the correct
 number of rows, a positive integer feature dimension, and that a constant image
