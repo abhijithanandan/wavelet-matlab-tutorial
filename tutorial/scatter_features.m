@@ -1,14 +1,15 @@
 function F = scatter_features(X, n_levels, g)
-% SCATTER_FEATURES  Turn images into wavelet scattering features (no training).
+% SCATTER_FEATURES  Multi-level wavelet transform features (no training).
 %   F = SCATTER_FEATURES(X, n_levels, g) takes images X (H x W x N) and returns
-%   a feature matrix F (N x D). For each image it runs the wavelet scattering
-%   cascade with the predefined Haar filters:
-%     1. split the image into LL, LH, HL, HH with haar_dwt,
-%     2. take the modulus of the high-pass sub-bands (the scattering nonlinearity),
-%     3. average-pool each one into a small g x g grid of numbers,
-%     4. feed the LL approximation back in and repeat for n_levels levels,
-%     5. also pool the final LL approximation,
-%     6. stack everything into one feature vector.
+%   a feature matrix F (N x D). This is the ordinary multi-level wavelet transform
+%   used in the 2018 Wavelet CNN paper (not the scattering transform, which is the
+%   optional variant in matlab/+wscat). For each image it:
+%     1. splits the image into LL, LH, HL, HH with haar_dwt,
+%     2. takes the magnitude of the high-pass sub-bands,
+%     3. average-pools each one into a small g x g grid of numbers,
+%     4. feeds the LL approximation back in and repeats for n_levels levels,
+%     5. also pools the final LL approximation,
+%     6. stacks everything into one feature vector.
 %   Nothing is learned: the filters are the fixed Haar wavelet and there is no
 %   training. The pooling grid g keeps a little spatial layout while giving some
 %   tolerance to small shifts.

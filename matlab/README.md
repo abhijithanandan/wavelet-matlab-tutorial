@@ -1,12 +1,13 @@
 # Advanced Wavelet Scattering Reference
 
-This folder contains the advanced full-port wavelet scattering network. It goes
-deeper than the tutorial: a 4-level cascade on the approximation sub-band
-(first-order scattering) plus one extra decomposition of each first-level detail
-band (second-order scattering). Each kept sub-band is reduced to a single global
-average, giving a fixed-length feature vector per image. The readout is a
-pseudo-inverse linear classifier with Tikhonov regularisation: no iterative
-training, no toolboxes.
+The 2018 paper uses an ordinary wavelet transform, which is what the tutorial
+implements. This folder is the optional wavelet scattering transform variant
+(Mallat-style), the "wavelet scattering transform can be used" path. It goes deeper
+than the tutorial: a 4-level cascade on the approximation sub-band (first order)
+plus one extra decomposition of each first-level detail band (second order, the
+scattering step). Each kept sub-band is reduced to a single global average, giving
+a fixed-length feature vector per image. The readout is a pseudo-inverse linear
+classifier with Tikhonov regularisation: no iterative training, no toolboxes.
 
 The dataset used is KTH-TIPS texture patches, stored in
 `tutorial/data/textures_small.mat`. That is simply where the data file ships;
@@ -44,8 +45,9 @@ prints the feature dimension and test accuracy.
 
 | | Tutorial | Advanced (this folder) |
 |---|---|---|
+| Method | ordinary wavelet transform | wavelet scattering transform |
 | DWT levels | 3 | 4 |
-| Scattering order | 1 | 2 (extra decomposition at level 1) |
+| Scattering order | none | 2nd order (extra decomposition at level 1) |
 | Feature dimension | 160 | 25 |
 | Readout | pinv (shared) | pinv (shared) |
 | Toolboxes | none | none |

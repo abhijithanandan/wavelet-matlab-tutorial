@@ -1,9 +1,10 @@
-% WAVELET SCATTERING NETWORK: a hands-on tutorial in MATLAB
+% MULTI-LEVEL WAVELET TRANSFORM: a hands-on tutorial in MATLAB
 %
 % This script shows how a convolutional network can classify textures using
 % filters that are DESIGNED, not learned: the Haar wavelet transform written as
 % plain filters, and a classifier solved in one step with no training. It is the
-% non-iterative, pseudo-inverse version of the wavelet CNN idea.
+% non-iterative, pseudo-inverse version of the wavelet CNN idea (the 2018 paper's
+% ordinary wavelet transform; the optional scattering transform is in ../matlab).
 %
 % How to use it:
 %   - To just run it: open this tutorial folder in MATLAB and type  run_tutorial
@@ -46,13 +47,14 @@ show_save(montage_image(upscale(bands, 2), 4, 2), ...
           'wavelet sub-bands (LL, |LH|, |HL|, |HH|)', ...
           'figures/subbands.png', display_ok);
 
-%% Step 3: The scattering cascade
+%% Step 3: The multi-level wavelet transform
 % We do not stop at one level. We feed the LL approximation back into the same
 % wavelet transform, three times, so the deeper "layers" take their input from
-% the wavelet transform of the previous level. At each level we keep the modulus
+% the wavelet transform of the previous level. At each level we keep the magnitude
 % of the detail bands, pooled into a small grid, and at the end we also keep the
-% final approximation. Stacking these gives one feature vector per image.
-fprintf('Extracting scattering features for all textures ...\n');
+% final approximation. Stacking these gives one feature vector per image. This is
+% the ordinary multi-level wavelet transform, as in the 2018 paper.
+fprintf('Extracting wavelet-transform features for all textures ...\n');
 t = tic;
 Ftrain = scatter_features(Xtrain, 3, 4);
 Ftest  = scatter_features(Xtest, 3, 4);
@@ -74,15 +76,15 @@ fprintf('\nConfusion matrix (rows = true class, cols = predicted):\n');
 for r = 1:C, fprintf('  %d:  %s\n', r, sprintf('%4d', conf(r, :))); end
 
 %% Step 5: Do the wavelet features help?
-% Same pseudo-inverse classifier, on the raw pixels versus on the scattering
-% features.
+% Same pseudo-inverse classifier, on the raw pixels versus on the
+% wavelet-transform features.
 Fraw_tr = reshape(Xtrain, size(Xtrain,1) * size(Xtrain,2), []).';
 Fraw_te = reshape(Xtest,  size(Xtest,1) * size(Xtest,2), []).';
 raw_model = pinv_classify('fit', Fraw_tr, ytrain, 1e-2);
 acc_raw = mean(pinv_classify('predict', raw_model, Fraw_te) == ytest);
 fprintf('\n[1] Do the wavelet features help? (same classifier, with vs without)\n');
 fprintf('  raw pixels:          %.2f%%\n', 100 * acc_raw);
-fprintf('  scattering features: %.2f%%\n', 100 * acc);
+fprintf('  wavelet features:    %.2f%%\n', 100 * acc);
 fprintf('  the wavelet features add about %.0f points.\n', 100 * (acc - acc_raw));
 
 %% Step 6: Is the pseudo-inverse doing the work?

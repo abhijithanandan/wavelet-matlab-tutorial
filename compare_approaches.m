@@ -3,12 +3,12 @@ function compare_approaches()
 %
 % Runs all three on the same bundled textures with the same pseudo-inverse
 % readout (no training) and prints the accuracy side by side:
-%   raw pixels  ->  first-order wavelet scattering  ->  second-order scattering
+%   raw pixels  ->  ordinary wavelet transform  ->  wavelet scattering transform
 %
-% It takes the shared core from common/, the first-order features from tutorial/,
-% and the second-order features from matlab/, so it sits above the two tiers and
-% does not make either one depend on the other. It is light: the whole run is a
-% few seconds. Run it from the repo root:  compare_approaches
+% It takes the shared core from common/, the wavelet-transform features from
+% tutorial/, and the scattering-transform features from matlab/, so it sits above
+% the two tiers and does not make either one depend on the other. It is light: the
+% whole run is a few seconds. Run it from the repo root:  compare_approaches
   addpath('common'); addpath('tutorial'); addpath('matlab');
 
   d = load('tutorial/data/textures_small.mat');
@@ -20,18 +20,18 @@ function compare_approaches()
   Rte = reshape(Xtest,  size(Xtest, 1) * size(Xtest, 2), []).';
   acc_raw = accuracy(Rtr, Rte, ytrain, ytest);
 
-  % First-order wavelet scattering: the tutorial features (3 levels, pooled).
+  % Ordinary wavelet transform: the tutorial features (3 levels, pooled).
   F1tr = scatter_features(Xtrain, 3, 4); F1te = scatter_features(Xtest, 3, 4);
   acc1 = accuracy(F1tr, F1te, ytrain, ytest);
 
-  % Second-order wavelet scattering: the advanced features (4 levels, deeper).
+  % Wavelet scattering transform: the advanced features (4 levels, second order).
   F2tr = wscat.features(Xtrain); F2te = wscat.features(Xtest);
   acc2 = accuracy(F2tr, F2te, ytrain, ytest);
 
   fprintf('\nSame textures, same pseudo-inverse readout, no training:\n');
   fprintf('  raw pixels             %5.1f%%\n', 100 * acc_raw);
-  fprintf('  first-order wavelet    %5.1f%%\n', 100 * acc1);
-  fprintf('  second-order wavelet   %5.1f%%\n', 100 * acc2);
+  fprintf('  wavelet transform      %5.1f%%\n', 100 * acc1);
+  fprintf('  wavelet scattering     %5.1f%%\n', 100 * acc2);
   fprintf('\nMore wavelet structure means more accuracy, with no training step.\n');
 end
 

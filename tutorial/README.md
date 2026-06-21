@@ -1,16 +1,18 @@
-# Wavelet Scattering Tutorial
+# Wavelet Transform Tutorial
 
-This tutorial walks through a small wavelet scattering network applied to texture
-classification. The goal is to make the idea concrete: fixed wavelet filters build
-a feature representation, and a closed-form pseudo-inverse solve replaces iterative
-training. No toolboxes are required; it runs in MATLAB or GNU Octave.
+This tutorial walks through a small wavelet-transform network applied to texture
+classification, the representation used in the 2018 Wavelet CNN paper. The goal is
+to make the idea concrete: fixed wavelet filters build a feature representation, and
+a closed-form pseudo-inverse solve replaces iterative training. No toolboxes are
+required; it runs in MATLAB or GNU Octave. An optional wavelet scattering transform
+variant (a deeper, second-order extension) is in the `matlab/` folder.
 
 ## What it demonstrates
 
 - How one level of the Haar wavelet transform splits an image into an approximation
   sub-band and three detail sub-bands (horizontal, vertical, diagonal edges).
 - How cascading that transform across multiple levels and pooling the detail
-  responses builds a stable, translation-covariant feature vector.
+  responses builds a compact, multi-resolution feature vector.
 - That a pseudo-inverse classifier fitted to those features reaches about 65% test
   accuracy on six texture classes without a single gradient step.
 - How that compares to raw pixels (about 20 percentage points lower) and to a
@@ -46,11 +48,12 @@ Applies `haar_dwt` to a single training image and displays the four sub-bands: t
 low-pass approximation (LL) and the three detail bands (LH, HL, HH), showing what
 edges each one responds to.
 
-**Step 3: The scattering cascade.**
+**Step 3: The multi-level wavelet transform.**
 Calls `scatter_features` with three levels and a 4x4 pooling grid. Each level
 feeds the LL approximation from the previous level back into `haar_dwt`, collects
-the pooled modulus of the detail bands, and at the end appends the final
-approximation. The result is a 160-element feature vector per image.
+the pooled magnitude of the detail bands, and at the end appends the final
+approximation. The result is a 160-element feature vector per image. This is the
+ordinary multi-level wavelet transform from the 2018 paper.
 
 **Step 4: Classify and evaluate.**
 Fits a pseudo-inverse classifier (`pinv_classify`) on the training features and
@@ -74,7 +77,7 @@ features and compares. Training recovers extra accuracy at the cost of iteration
 | File | Location | Role |
 |------|----------|------|
 | `run_tutorial.m` | `tutorial/` | The main tutorial script |
-| `scatter_features.m` | `tutorial/` | Scattering cascade: loops `haar_dwt`, pools detail bands |
+| `scatter_features.m` | `tutorial/` | Multi-level wavelet transform: loops `haar_dwt`, pools detail bands |
 | `montage_image.m` | `tutorial/` | Lays out a stack of images into a contact sheet |
 | `upscale.m` | `tutorial/` | Nearest-neighbour upscale for display |
 | `show_save.m` | `tutorial/` | Saves a figure to PNG (and shows it when display is available) |
@@ -99,7 +102,7 @@ Reference: M. Fritz, E. Hayman, B. Caputo, J.-O. Eklundh, "The KTH-TIPS database
 
 ## Things to try
 
-- **Change the number of scattering levels.** In the `scatter_features` calls in
+- **Change the number of wavelet levels.** In the `scatter_features` calls in
   Steps 3 and 5, the second argument is `n_levels` (currently 3). Try 1, 2, or 4
   and watch how feature size and accuracy change.
 

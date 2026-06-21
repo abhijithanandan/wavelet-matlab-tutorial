@@ -1,17 +1,19 @@
 # Wavelet-CNN
 
-A MATLAB/Octave implementation of the wavelet scattering network idea from Fujieda
-et al. (2018). The network uses predefined Haar wavelet filters to compute a
-multi-level scattering transform, then fits a pseudo-inverse classifier to the
-resulting features. No toolboxes, no gradient-based training, and no external
+A MATLAB/Octave implementation of the Wavelet CNN idea from Fujieda et al. (2018).
+That paper uses an ordinary multi-level wavelet transform to feed the network. Here
+the learned convolutions are replaced by predefined Haar wavelet filters, and the
+final classifier is a single pseudo-inverse solve instead of training. An optional
+wavelet scattering transform variant (Mallat-style, with a second-order term) is
+also included. No toolboxes, no gradient-based training, and no external
 dependencies are required. It runs in GNU Octave or MATLAB.
 
 ## Start here
 
 Open the `tutorial/` folder. It walks through the full pipeline step by step on a
-small six-class texture dataset: loading images, computing the scattering transform,
-fitting the classifier, and comparing against raw pixels and a trained softmax
-baseline.
+small six-class texture dataset: loading images, computing the multi-level wavelet
+transform (the 2018 paper's representation), fitting the classifier, and comparing
+against raw pixels and a trained softmax baseline.
 
 ```matlab
 cd tutorial
@@ -26,9 +28,11 @@ network slips, not just the score.
 
 ## Advanced reference
 
-`matlab/run_full_wscat.m` is a full port with a deeper scattering cascade, tighter
-pooling, and a more controlled train/test split. It uses the same shared core
-functions and reaches about 85% test accuracy on the same six classes.
+`matlab/run_full_wscat.m` is the optional wavelet scattering transform variant
+(Mallat-style): a deeper cascade with a second-order term that re-decomposes the
+detail bands. This is the "wavelet scattering transform can be used" path, distinct
+from the paper's ordinary wavelet transform in the tutorial. It uses the same shared
+core functions and reaches about 85% test accuracy on the same six classes.
 
 ```matlab
 cd matlab
@@ -47,8 +51,8 @@ compare_approaches
 
 ```
   raw pixels             45.4%
-  first-order wavelet    65.4%
-  second-order wavelet   85.0%
+  wavelet transform      65.4%
+  wavelet scattering     85.0%
 ```
 
 ## Layout
