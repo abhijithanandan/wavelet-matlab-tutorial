@@ -45,6 +45,9 @@ function v = pool_grid(M, g)
 % The rows and columns are split into g near-equal bands; each cell is the mean
 % of its block. Works for any M whose sides are at least g.
   [H, W] = size(M);
+  if H < g || W < g
+    error('pool_grid: matrix is %dx%d but needs at least %dx%d to pool into a %d-by-%d grid', H, W, g, g, g, g);
+  end
   ri = round(linspace(0, H, g + 1));
   ci = round(linspace(0, W, g + 1));
   P = zeros(g, g);
