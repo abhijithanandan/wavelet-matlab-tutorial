@@ -1,6 +1,6 @@
 function test_pinv_classify()
 % Two clearly separated clusters in 2-D must be classified perfectly.
-  rand('seed', 0);
+  rng(0);
   A = [randn(20, 2) * 0.1 + 3];   % class 1 near (3,3)
   B = [randn(20, 2) * 0.1 - 3];   % class 2 near (-3,-3)
   F = [A; B];

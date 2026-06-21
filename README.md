@@ -20,7 +20,9 @@ run_tutorial
 
 The tutorial reaches about 65% test accuracy on six KTH-TIPS texture classes,
 compared to about 45% for a raw-pixel baseline with the same classifier. No training
-loop is involved.
+loop is involved. It ends by displaying a set of test textures with the predicted
+and true class for each, so you can see the actual predictions and where the
+network slips, not just the score.
 
 ## Advanced reference
 
@@ -33,10 +35,27 @@ cd matlab
 run_full_wscat
 ```
 
+## Compare the representations
+
+`compare_approaches.m` runs all three representations on the same textures with the
+same pseudo-inverse readout and prints the accuracy side by side, so the progression
+is visible in one place. Run it from the repo root:
+
+```matlab
+compare_approaches
+```
+
+```
+  raw pixels             45.4%
+  first-order wavelet    65.4%
+  second-order wavelet   85.0%
+```
+
 ## Layout
 
 | Path | Contents |
 |------|----------|
+| `compare_approaches.m` | One-glance accuracy ladder: raw pixels vs first-order vs second-order wavelet |
 | `common/` | Shared core: `haar_dwt.m` (one-level 2D Haar DWT), `pinv_classify.m` (pseudo-inverse classifier) |
 | `tutorial/` | Student tutorial: `run_tutorial.m`, `scatter_features.m`, figure helpers, bundled data, `README.md` |
 | `matlab/` | Advanced full port: `+wscat/features.m`, `run_full_wscat.m`, `README.md` |

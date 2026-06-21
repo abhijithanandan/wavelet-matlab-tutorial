@@ -91,7 +91,7 @@ fprintf('  the wavelet features add about %.0f points.\n', 100 * (acc - acc_raw)
 % one closed-form step.
 mu = mean(Ftrain, 1); sd = std(Ftrain, 0, 1); sd(sd == 0) = 1;
 Zte = [(Ftest - mu) ./ sd, ones(size(Ftest, 1), 1)];
-rand('seed', 1); rand_W = randn(size(Zte, 2), C);
+rng(1); rand_W = randn(size(Zte, 2), C);
 [~, pred_rand] = max(Zte * rand_W, [], 2);
 acc_rand = mean(pred_rand == ytest);
 fprintf('\n[2] Is the pseudo-inverse doing the work? (same fixed features)\n');
@@ -106,5 +106,23 @@ acc_trained = mean(softmax_classify('predict', tr_model, Ftest) == ytest);
 fprintf('\n[3] Would training do better? (same features, two ways to set the output)\n');
 fprintf('  pseudo-inverse (one solve, no training): %.2f%%\n', 100 * acc);
 fprintf('  trained by gradient descent (iterative): %.2f%%\n', 100 * acc_trained);
+
+%% Step 8: Look at the predictions, not just the score
+% A percentage hides what is really happening. Here are a few test textures with
+% the class the network predicted and the true class, so you can see where it is
+% right and where it slips. The names are the six bundled classes, in label order.
+names = {'aluminium_foil', 'brown_bread', 'corduroy', 'cotton', 'cracker', 'linen'};
+samp = round(linspace(1, size(Xtest, 3), 12));
+show_save(montage_image(upscale(Xtest(:, :, samp), 2), 6, 2), ...
+          'test textures (predicted vs true printed below)', ...
+          'figures/predictions.png', display_ok);
+fprintf('\nPredictions for the shown test textures (left to right, top to bottom):\n');
+fprintf('  (a * marks a mistake)\n');
+for i = 1:numel(samp)
+  s = samp(i);
+  mark = '   ';
+  if pred(s) ~= ytest(s), mark = ' * '; end
+  fprintf('%spred: %-15s true: %-15s\n', mark, names{pred(s)}, names{ytest(s)});
+end
 
 fprintf('\nDone. Figures saved in the figures/ folder.\n');
